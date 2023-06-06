@@ -17,16 +17,17 @@ package runtime
 
 import (
 	"fmt"
+	"math"
 	"syscall"
 )
 
 // syscall.RLIM_INFINITY is a constant and its default type is int.
 // It needs to be converted to an int64 variable to be compared with uint64 values.
 // See https://golang.org/ref/spec#Conversions
-var unlimited int64 = syscall.RLIM_INFINITY
+var unlimited uint64 = syscall.RLIM_INFINITY & math.MaxUint64
 
 func limitToString(v uint64, unit string) string {
-	if v == uint64(unlimited) {
+	if v == unlimited {
 		return "unlimited"
 	}
 	return fmt.Sprintf("%d%s", v, unit)
